@@ -40,7 +40,7 @@ button:hover {
   background-color: #206b2b;
 }
 
-button:focus {
+button:active {
   background-color: #104547;
 }
 

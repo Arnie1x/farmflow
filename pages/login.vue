@@ -4,16 +4,15 @@
       <Logo />
       <form class="flex flex-col gap-3 mx-auto items-center max-w-[37.5rem] w-full">
         <p class="text-3xl">Sign In</p>
-        <input type="text" name="email" id="email" placeholder="Email" class="textfield">
-        <input type="password" name="password" id="password" placeholder="Password" class="textfield">
+        <input id="email" type="text" name="email" placeholder="Email" class="textfield">
+        <input id="password" type="password" name="password" placeholder="Password" class="textfield">
         <NuxtLink to="/auth/forgot-password" class="text-sm w-full text-right link-white">Forgot your Password?</NuxtLink>
         <button type="submit">Sign In</button>
       </form>
-      <p>Don't have an account? <NuxtLink class="link" to="/auth/signup">Sign Up</NuxtLink></p>
+      <p>Don't have an account? <NuxtLink class="link" to="/register">Sign Up</NuxtLink></p>
     </div>
     <template #image>
-      <div class="auth-bg w-full h-full rounded-2xl">
-      </div>
+      <div class="auth-bg w-full h-full rounded-2xl"/>
     </template>
   </NuxtLayout>
 </template>
