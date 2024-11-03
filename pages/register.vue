@@ -37,12 +37,16 @@ const successMsg = ref('')
 async function signup() {
   errorMsg.value = ''
   successMsg.value = ''
+  if (password.value === null) {
+    errorMsg.value = 'Password is required.'
+    return
+  }
   if (password.value !== confirm_password.value) {
     errorMsg.value = 'Passwords do not match'
     return
   }
   try {
-    const { data, error } = await client.auth.signUp({
+    const { error } = await client.auth.signUp({
     email: email.value,
     password: password.value,
   //   options: {
