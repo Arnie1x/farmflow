@@ -12,8 +12,7 @@
       <p>Don't have an account? Sign Up</p>
     </div>
     <template #image>
-      <div class="w-full h-full">
-        <NuxtImg src="/images/sign-in.png" fit="fill" />
+      <div class="auth-bg w-full h-full rounded-2xl">
       </div>
     </template>
   </NuxtLayout>
@@ -26,4 +25,13 @@ definePageMeta({
 
 </script>
 
-<style scoped></style>
+<style scoped>
+
+.auth-bg {
+  background-image: url("/images/sign-in.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+</style>
