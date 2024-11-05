@@ -39,7 +39,7 @@ const successMsg = ref('')
 
 async function signup() {
   definePageMeta({
-    layout: "auth"
+    layout: "empty"
   })
 
   errorMsg.value = ''

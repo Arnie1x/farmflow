@@ -22,7 +22,7 @@
 
 <script setup lang="ts">
 definePageMeta({
-  layout: "auth"
+  layout: "empty"
 })
 // const router = useRouter()
 const client = useSupabaseClient()
