@@ -80,8 +80,38 @@
 
 <script lang="ts" setup>
 const route = useRoute()
+const path = route.path
 
-console.log(route.path)
+const isDashboard = ref(false)
+const isChat = ref(false)
+const isFarms = ref(false)
+const isFaq = ref(false)
+
+if (path.includes('app')) {
+  isDashboard.value = true
+  isChat.value = false
+  isFarms.value = false
+  isFaq.value = false
+}
+else if (path.includes('chat')) {
+  isChat.value = true
+  isDashboard.value = false
+  isFarms.value = false
+  isFaq.value = false
+}
+else if (path.includes('farms')) {
+  isDashboard.value = false
+  isChat.value = false
+  isFarms.value = true
+  isFaq.value = false
+}
+else if (path.includes('faq')) {
+  isDashboard.value = false
+  isChat.value = false
+  isFarms.value = false
+  isFaq.value = true
+}
+
 </script>
 
 <style scoped>
@@ -126,5 +156,17 @@ li:hover .svg-icon-fill {
 .svg-icon-fill {
   fill: #848AA0;
   transition: 0.5s all ease;
+}
+
+.router-link-active li {
+  background-color: #848aa04D;
+}
+
+.router-link-active .svg-icon {
+  stroke: #2B9B3C;
+}
+
+.router-link-active .svg-icon-fill {
+  fill: #2B9B3C;
 }
 </style>

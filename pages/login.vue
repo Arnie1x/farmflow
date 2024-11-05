@@ -5,8 +5,7 @@
       <form class="flex flex-col gap-3 mx-auto items-center max-w-[37.5rem] w-full" @submit.prevent="signin">
         <p class="text-3xl">Sign In</p>
         <input id="email" v-model="email" type="text" name="email" placeholder="Email" class="textfield">
-        <input 
-          id="password" v-model="password" type="password" name="password" placeholder="Password"
+        <input id="password" v-model="password" type="password" name="password" placeholder="Password"
           class="textfield">
         <NuxtLink to="/auth/forgot-password" class="text-sm w-full text-right link-white">Forgot your Password?
         </NuxtLink>
@@ -22,8 +21,7 @@
 </template>
 
 <script setup lang="ts">
-
-const router = useRouter()
+// const router = useRouter()
 const client = useSupabaseClient()
 const email = ref('')
 const password = ref(null)
@@ -43,7 +41,7 @@ async function signin() {
     if (error) {
       throw error
     }
-    router.push("/app")
+    navigateTo("/app")
   } catch (error) {
     errorMsg.value = error.message
   }
