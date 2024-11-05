@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout name="auth">
     <div class="w-full h-full flex flex-col gap-3 justify-between items-center text-white">
-      <Logo />
+      <LogoItem />
       <form class="flex flex-col gap-3 mx-auto items-center max-w-[37.5rem] w-full" @submit.prevent="signup">
         <p class="text-3xl">Sign Up</p>
         <div class="flex flex-row gap-3 w-full">
