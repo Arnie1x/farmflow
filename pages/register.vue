@@ -9,16 +9,19 @@
           <input id="lname" v-model="last_name" type="text" name="lname" placeholder="Last Name" class="textfield">
         </div>
         <input id="email" v-model="email" type="text" name="email" placeholder="Email" class="textfield">
-        <input id="password" v-model="password" type="password" name="password" placeholder="Password" class="textfield">
-        <input id="confirm-password" v-model="confirm_password" type="password" name="confirm-password" placeholder="Confirm Password" class="textfield">
+        <input id="password" v-model="password" type="password" name="password" placeholder="Password"
+          class="textfield">
+        <input id="confirm-password" v-model="confirm_password" type="password" name="confirm-password"
+          placeholder="Confirm Password" class="textfield">
         <p v-if="errorMsg" class="text-red-500">{{ errorMsg }}</p>
         <p v-if="successMsg" class="text-green-500">{{ successMsg }}</p>
         <button type="submit">Sign Up</button>
       </form>
-      <p>Already have an account? <NuxtLink class="link" to="/login">Sign In</NuxtLink></p>
+      <p>Already have an account? <NuxtLink class="link" to="/login">Sign In</NuxtLink>
+      </p>
     </div>
     <template #image>
-      <div class="auth-bg w-full h-full rounded-2xl"/>
+      <div class="auth-bg w-full h-full rounded-2xl" />
     </template>
   </NuxtLayout>
 </template>
@@ -35,6 +38,10 @@ const errorMsg = ref('')
 const successMsg = ref('')
 
 async function signup() {
+  definePageMeta({
+    layout: "auth"
+  })
+
   errorMsg.value = ''
   successMsg.value = ''
   if (password.value === null) {
@@ -47,19 +54,19 @@ async function signup() {
   }
   try {
     const { error } = await client.auth.signUp({
-    email: email.value,
-    password: password.value,
-  //   options: {
-  //     data: {
-  //       first_name: first_name,
-  //       last_name: last_name,
-  //   },
-  // },
-  })
-  if (error) {
-    throw error
-  }
-  successMsg.value = 'Account Creation Successful. Check your Email for the Verification Link'
+      email: email.value,
+      password: password.value,
+      //   options: {
+      //     data: {
+      //       first_name: first_name,
+      //       last_name: last_name,
+      //   },
+      // },
+    })
+    if (error) {
+      throw error
+    }
+    successMsg.value = 'Account Creation Successful. Check your Email for the Verification Link'
   } catch (error) {
     errorMsg.value = error.message
   }
@@ -68,7 +75,6 @@ async function signup() {
 </script>
 
 <style scoped>
-
 .auth-bg {
   background-image: url("/images/sign-up.png");
   background-position: center;
@@ -85,5 +91,4 @@ async function signup() {
   text-decoration: underline;
   color: #2ac241;
 }
-
 </style>

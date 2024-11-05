@@ -21,6 +21,9 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: "auth"
+})
 // const router = useRouter()
 const client = useSupabaseClient()
 const email = ref('')
