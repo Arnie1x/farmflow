@@ -6,8 +6,13 @@
       <SideBar />
     </div>
 
-    <div class="h-full w-full rounded-2xl bg-white">
-      <slot />
+    <div class="h-full w-full flex flex-col rounded-2xl bg-white">
+      <div class="w-full h-[4rem] flex flex-row justify-between items-center border-gray-300 border-b-2 p-5">
+        <slot name="header" />
+      </div>
+      <div class="p-5">
+        <slot />
+      </div>
     </div>
 
   </div>
