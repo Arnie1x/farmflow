@@ -63,7 +63,7 @@
       </ul>
     </div>
     <ul class="w-full flex flex-col gap-2">
-      <NuxtLink to="/">
+      <Button @click="logout">
         <li>
           <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path class="svg-icon"
@@ -73,43 +73,55 @@
 
           <p>Sign Out</p>
         </li>
-      </NuxtLink>
+      </Button>
     </ul>
   </div>
 </template>
 
 <script lang="ts" setup>
-const route = useRoute()
-const path = route.path
+// const route = useRoute()
+// const path = route.path
 
-const isDashboard = ref(false)
-const isChat = ref(false)
-const isFarms = ref(false)
-const isFaq = ref(false)
+// const isDashboard = ref(false)
+// const isChat = ref(false)
+// const isFarms = ref(false)
+// const isFaq = ref(false)
 
-if (path.includes('app')) {
-  isDashboard.value = true
-  isChat.value = false
-  isFarms.value = false
-  isFaq.value = false
-}
-else if (path.includes('chat')) {
-  isChat.value = true
-  isDashboard.value = false
-  isFarms.value = false
-  isFaq.value = false
-}
-else if (path.includes('farms')) {
-  isDashboard.value = false
-  isChat.value = false
-  isFarms.value = true
-  isFaq.value = false
-}
-else if (path.includes('faq')) {
-  isDashboard.value = false
-  isChat.value = false
-  isFarms.value = false
-  isFaq.value = true
+// if (path.includes('app')) {
+//   isDashboard.value = true
+//   isChat.value = false
+//   isFarms.value = false
+//   isFaq.value = false
+// }
+// else if (path.includes('chat')) {
+//   isChat.value = true
+//   isDashboard.value = false
+//   isFarms.value = false
+//   isFaq.value = false
+// }
+// else if (path.includes('farms')) {
+//   isDashboard.value = false
+//   isChat.value = false
+//   isFarms.value = true
+//   isFaq.value = false
+// }
+// else if (path.includes('faq')) {
+//   isDashboard.value = false
+//   isChat.value = false
+//   isFarms.value = false
+//   isFaq.value = true
+// }
+
+const client = useSupabaseClient()
+
+async function logout() {
+  try {
+    const { error } = await client.auth.signOut()
+    if (error) throw error
+    navigateTo('/login')
+  } catch (error) {
+    console.log(error.message)
+  }
 }
 
 </script>

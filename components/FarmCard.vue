@@ -2,7 +2,7 @@
   <NuxtLink to="/app/farms/0">
     <div class="h-[18.75rem] max-w-[31.25rem] min-w-[18.75rem] rounded-2xl border-2 flex flex-col justify-between gap-2">
       <div class="w-full h-full p-3">
-        Weather
+        
       </div>
       <div class="border" />
       <div class="w-full h-full p-3 flex flex-col">

@@ -9,7 +9,8 @@
           class="textfield">
         <NuxtLink to="/auth/forgot-password" class="text-sm w-full text-right link-white">Forgot your Password?
         </NuxtLink>
-        <button type="submit">Sign In</button>
+        <p v-if="errorMsg" class="text-red-500">{{ errorMsg }}</p>
+        <button class="button" type="submit">Sign In</button>
       </form>
       <p>Don't have an account? <NuxtLink class="link" to="/register">Sign Up</NuxtLink>
       </p>

@@ -15,7 +15,7 @@
           placeholder="Confirm Password" class="textfield">
         <p v-if="errorMsg" class="text-red-500">{{ errorMsg }}</p>
         <p v-if="successMsg" class="text-green-500">{{ successMsg }}</p>
-        <button type="submit">Sign Up</button>
+        <button class="button" type="submit">Sign Up</button>
       </form>
       <p>Already have an account? <NuxtLink class="link" to="/login">Sign In</NuxtLink>
       </p>
