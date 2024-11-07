@@ -5,14 +5,14 @@
     <div class="w-full h-full max-w-[18.75rem]">
       <SideBar />
     </div>
-    
+
     <div class="h-full w-full rounded-2xl bg-white">
       <slot />
     </div>
 
   </div>
 </template>
-<style scoped>
+<script lang="ts" setup>
 
-
-</style>
+</script>
+<style scoped></style>

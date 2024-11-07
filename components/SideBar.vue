@@ -63,7 +63,7 @@
       </ul>
     </div>
     <ul class="w-full flex flex-col gap-2">
-      <NuxtLink to="/signout">
+      <NuxtLink to="/">
         <li>
           <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path class="svg-icon"
