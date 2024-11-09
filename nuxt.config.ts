@@ -13,5 +13,13 @@ export default defineNuxtConfig({
   ],
   supabase: {
     redirect: false,
+  },
+  runtimeConfig: {
+    // The private keys which are only available within server-side
+    // mapboxAccessToken: '',
+    // Keys within public, will be also exposed to the client-side
+    public: {
+      mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
+    }
   }
 })
