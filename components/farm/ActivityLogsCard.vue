@@ -6,9 +6,9 @@
     </div>
     <div class="flex flex-col gap-3">
       <!-- <p class="text-2xl font-bold text-[#104547]">No Activity Logs</p> -->
-       <ActivityLogItem />
-       <ActivityLogItem />
-       <ActivityLogItem />
+       <FarmActivityLogItem />
+       <FarmActivityLogItem />
+       <FarmActivityLogItem />
     </div>
   </div>
 </template>

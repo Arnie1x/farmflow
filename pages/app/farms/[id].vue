@@ -5,20 +5,18 @@
     </template>
     <div class="w-full h-full flex xl:flex-row flex-col gap-2">
       <div class="h-full w-full xl:max-w-[31.25rem] max-w-[64rem] flex flex-col gap-2">
-        <AISummaryCard />
-        <PendingActivitiesCard />
+        <FarmAISummaryCard />
+        <FarmPendingActivitiesCard />
       </div>
       <div class="w-full h-full flex flex-col gap-2">
         <FarmWeatherCard />
-        <ActivityLogsCard />
+        <FarmActivityLogsCard />
       </div>
     </div>
   </NuxtLayout>
 </template>
 
 <script lang="ts" setup>
-import AISummaryCard from '~/components/AISummaryCard.vue';
-
 definePageMeta({
   middleware: 'auth',
 })

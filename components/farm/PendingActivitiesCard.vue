@@ -6,10 +6,10 @@
     </div>
     <div class="w-full h-full flex flex-col gap-5">
       <p class="text-2xl font-bold">Month</p>
-      <PendingActivityItem />
-      <PendingActivityItem />
-      <PendingActivityItem />
-      <PendingActivityItem />
+      <FarmPendingActivityItem />
+      <FarmPendingActivityItem />
+      <FarmPendingActivityItem />
+      <FarmPendingActivityItem />
     </div>
   </div>
 </template>
