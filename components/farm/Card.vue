@@ -28,10 +28,6 @@ const props = defineProps({
   farm: {
     type: Object,
     required: true
-  },
-  id: {
-    type: String,
-    required: true
   }
 })
 </script>

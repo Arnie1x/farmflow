@@ -63,17 +63,16 @@
       </ul>
     </div>
     <ul class="w-full flex flex-col gap-2">
-      <Button @click="logout">
+      <div @click="logout" class="cursor-pointer">
         <li>
           <svg width="32" height="32" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path class="svg-icon"
               d="M23.75 26.25V29.375C23.75 30.2038 23.4208 30.9987 22.8347 31.5847C22.2487 32.1708 21.4538 32.5 20.625 32.5H8.125C7.2962 32.5 6.50134 32.1708 5.91529 31.5847C5.32924 30.9987 5 30.2038 5 29.375V10.625C5 9.7962 5.32924 9.00134 5.91529 8.41529C6.50134 7.82924 7.2962 7.5 8.125 7.5H20C21.7258 7.5 23.75 8.89922 23.75 10.625V13.75M28.75 26.25L35 20L28.75 13.75M13.75 20H33.75"
               stroke="#848AA0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
-
           <p>Sign Out</p>
         </li>
-      </Button>
+      </div>
     </ul>
   </div>
 </template>

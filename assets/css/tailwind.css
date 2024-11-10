@@ -44,6 +44,46 @@
   background-color: #104547;
 }
 
+.header-btn-svg {
+  transition: 0.5s all ease;
+  fill: #2B9B3C;
+  /* stroke: #2B9B3C; */
+}
+
+.header-btn-svg:hover {
+  fill: #206b2b;
+  /* stroke: #206b2b; */
+}
+
+.button-outlined {
+  padding-left: 1rem;
+  padding-right: 1rem;
+  outline: auto;
+  outline-color: #2B9B3C;
+  color: #2B9B3C;
+  fill: #2B9B3C;
+  border-radius: 1.25rem;
+  min-height: 3.125rem;
+  border-radius: 1rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  transition: 0.5s all ease;
+}
+
+.button-outlined:hover {
+  background-color: #2B9B3C;
+  color: #fff;
+}
+
+.button-outlined:hover .header-btn-svg {
+  fill: #fff;
+}
+
+.button-outlined:active {
+  background-color: #104547;
+  color: #fff;
+}
+
 .link {
   color: #2B9B3C;
   transition: 0.5s all ease;
