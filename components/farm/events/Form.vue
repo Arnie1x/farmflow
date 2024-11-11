@@ -30,22 +30,22 @@ const event = ref(null)
 const event_name = ref('')
 const description = ref('')
 const start_date = ref('')
-const end_date = ref(new Date())
+const end_date = ref(new Date().toISOString().slice(0, 16))
 const is_completed = ref(false)
 const errorMsg = ref('')
 const farmId = route.params.id
 
 event.value = await getEvent()
 
-if (route.path.includes('edit')) {
+if (route.params.event_id) {
   isUpdate.value = true
 }
 
 if (isUpdate.value) {
   event_name.value = event.value.name
   description.value = event.value.description
-  start_date.value = event.value.start_date
-  end_date.value = event.value.end_date
+  start_date.value = new Date(event.value.start_date).toISOString().slice(0, 16)
+  end_date.value = new Date(event.value.end_date).toISOString().slice(0, 16)
 }
 
 const submitForm = () => {
