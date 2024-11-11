@@ -26,25 +26,26 @@ const route = useRoute()
 const client = useSupabaseClient()
 const user = useSupabaseUser()
 
-const farm = ref(null)
+const event = ref(null)
 const event_name = ref('')
 const description = ref('')
 const start_date = ref('')
 const end_date = ref(new Date())
 const is_completed = ref(false)
 const errorMsg = ref('')
+const farmId = route.params.id
 
-farm.value = await getFarm()
+event.value = await getEvent()
 
 if (route.path.includes('edit')) {
   isUpdate.value = true
 }
 
 if (isUpdate.value) {
-  event_name.value = farm.value.name
-  description.value = farm.value.description
-  start_date.value = farm.value.start_date
-  end_date.value = farm.value.end_date
+  event_name.value = event.value.name
+  description.value = event.value.description
+  start_date.value = event.value.start_date
+  end_date.value = event.value.end_date
 }
 
 const submitForm = () => {
@@ -62,18 +63,18 @@ const submitForm = () => {
   }
 }
 
-async function getFarm() {
+async function getEvent() {
   try {
-    const farmId = route.params.id
-    let { data: farm, error } = await client
-      .from('farms')
+    const eventId = route.params.event_id
+    let { data: event, error } = await client
+      .from('events')
       .select('*')
-      .eq('id', farmId)
+      .eq('id', eventId)
       .single()
     if (error) {
       throw error
     }
-    return farm
+    return event
   } catch (error) {
     console.log(error)
   }
@@ -85,12 +86,12 @@ async function createEvent() {
     const { error } = await client
       .from('events')
       .insert(
-        { user_id: user.value.id, farm_id: farm.value.id, name: event_name.value, description: description.value, start_date: start_date.value, end_date: end_date.value, is_completed: is_completed.value }
+        { user_id: user.value.id, farm_id: farmId, name: event_name.value, description: description.value, start_date: start_date.value, end_date: end_date.value, is_completed: is_completed.value }
       )
     if (error) {
       throw error
     }
-    navigateTo('/app/farms/' + farm.value.id + '/events')
+    navigateTo('/app/farms/' + farmId + '/events')
   } catch (error) {
     errorMsg.value = error.message
   }
@@ -102,12 +103,12 @@ async function updateEvent() {
     const { data, error } = await client
       .from('events')
       .update({ name: event_name.value, description: description.value, start_date: start_date.value, end_date: end_date.value, is_completed: is_completed.value, updated_at: new Date() })
-      .eq('id', farm.value.id).select()
+      .eq('id', event.value.id).select()
     if (error) {
       throw error
     }
     console.log(data)
-    navigateTo('/app/farms/' + farm.value.id + '/events')
+    navigateTo('/app/farms/' + farmId + '/events')
   } catch (error) {
     errorMsg.value = error.message
   }
