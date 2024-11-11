@@ -6,9 +6,10 @@
     </div>
     <div v-for="event in events" :key="event.id" class="flex flex-col gap-3">
       <!-- <p class="text-2xl font-bold text-[#104547]">No Activity Logs</p> -->
-       <FarmActivityLogItem :event="event" />
-      </div>
-    <NuxtLink v-if="!isEventPage" :to="{ name: 'app-farms-id-events', params: { id: farmId } }" class="link h-min w-full">View More</NuxtLink>
+      <FarmActivityLogItem :event="event" />
+    </div>
+    <NuxtLink v-if="!isEventPage" :to="{ name: 'app-farms-id-events', params: { id: farmId } }"
+      class="link h-min w-full font-bold">View More</NuxtLink>
   </div>
 </template>
 
@@ -27,22 +28,22 @@ if (route.path.includes('events')) {
 
 async function getEvents() {
   try {
-  let { data: events, error } = await client
-    .from('events')
-    .select('*')
-    .eq('farm_id', farmId)
-  if (error) {
-    throw error
+    let { data: events, error } = await client
+      .from('events')
+      .select('*')
+      .eq('farm_id', farmId).order('created_at', { ascending: false })
+      .limit(5)
+    if (error) {
+      throw error
+    }
+    return events
+  } catch (error) {
+    console.log(error)
   }
-  return events
-} catch (error) {
-  console.log(error)
-}
 }
 </script>
 
 <style scoped>
-
 .link {
   color: #104547;
   transition: 0.5s all ease;
@@ -52,5 +53,4 @@ async function getEvents() {
   text-decoration: underline;
   color: #2ac241;
 }
-
 </style>
