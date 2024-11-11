@@ -22,8 +22,10 @@
       <input id="area_size" v-model="areaSize" type="number" class="text-black textfield" name="area_size"
         placeholder="Area Size (in Ha)">
     </div>
-    <p v-if="errorMsg" class="text-red-500 w-full text-center">{{ errorMsg }}</p>
-    <button class="text-white button h-min xl:max-w-[25rem]">{{ isUpdate ? 'Update Farm' : 'Add Farm' }}</button>
+    <div class="xl:max-w-[25rem] w-full">
+      <p v-if="errorMsg" class="text-red-500 w-full text-center">{{ errorMsg }}</p>
+      <button class="text-white button h-min xl:max-w-[25rem]">{{ isUpdate ? 'Update Farm' : 'Add Farm' }}</button>
+    </div>
   </form>
 </template>
 
