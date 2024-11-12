@@ -11,7 +11,38 @@
 </template>
 
 <script lang="ts" setup>
+import WeatherCache from '~/types/weather_cache';
 
+const props = defineProps({
+  latitude: {
+    type: Number,
+    required: true
+  },
+  longitude: {
+    type: Number,
+    required: true
+  },
+  limit : {
+    type: Number,
+    required: false,
+    default: 5
+  }
+})
+
+const runtimeConfig = useRuntimeConfig();
+const openWeatherMapApiKey = runtimeConfig.public.openWeatherMapApiKey;
+
+const weatherCache = new WeatherCache(openWeatherMapApiKey);
+
+try {
+  const weatherData = await weatherCache.getWeatherData({ longitude: props.longitude, latitude: props.latitude });
+  console.log(weatherData);
+} catch (error) {
+  console.log(error);
+}
+// console.log(props.longitude, props.latitude);
+// const weatherData = await weatherCache.getWeatherData({ longitude: props.longitude, latitude: props.latitude });
+// console.log(weatherData);
 </script>
 
 <style>

@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     // Keys within public, will be also exposed to the client-side
     public: {
       mapboxAccessToken: process.env.MAPBOX_ACCESS_TOKEN,
+      openWeatherMapApiKey: process.env.OPEN_WEATHER_MAP_API_KEY
     }
   }
 })
