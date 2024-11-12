@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full min-w-[18.75rem] rounded-2xl border-2 p-5 flex flex-col justify-between gap-5">
+  <div v-if="sortedGroupedEvents.length > 0" class="w-full min-w-[18.75rem] rounded-2xl border-2 p-5 flex flex-col justify-between gap-5">
     <div class="flex flex-row gap-2 justify-start items-center">
       <NuxtImg src="/images/icons/alert.svg" alt="ai" class="w-[2.125rem]" />
       <h1 class="text-3xl font-bold text-[#D36135]">Pending Activities</h1>
@@ -47,6 +47,7 @@ async function getEvents() {
       .from('events')
       .select('*')
       .eq('farm_id', farmId)
+      .eq('is_completed', false)
       .lte('end_date', threeDaysFromNow)
       .order('end_date', { ascending: false })
       .limit(5)

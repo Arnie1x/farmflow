@@ -10,8 +10,13 @@
       <input id="start_date" v-model="start_date" type="datetime-local" class="text-black textfield" name="start_date"
         placeholder="Start Date">
       <p>End Date *</p>
-      <input id="end_date" v-model="end_date" type="datetime-local" class="text-black textfield" name="end_date"
+      <input id="end_date" @input="checkCompletionStatus" v-model="end_date" type="datetime-local" class="text-black textfield" name="end_date"
         placeholder="End Date *">
+      <div v-if="show_is_completed" class="flex flex-row gap-2">
+        <input id="is_completed" v-model="is_completed" type="checkbox" class="text-black w-5" name="is_completed"
+          placeholder="Is Completed">
+        <label for="is_completed">Is Completed?</label>
+      </div>
     </div>
     <div class="xl:max-w-[25rem] w-full">
       <p v-if="errorMsg" class="text-red-500 w-full text-center">{{ errorMsg }}</p>
@@ -31,6 +36,7 @@ const event_name = ref('')
 const description = ref('')
 const start_date = ref('')
 const end_date = ref(new Date().toISOString().slice(0, 16))
+const show_is_completed = ref(false)
 const is_completed = ref(false)
 const errorMsg = ref('')
 const farmId = route.params.id
@@ -42,20 +48,23 @@ if (route.params.event_id) {
 }
 
 if (isUpdate.value) {
+  show_is_completed.value = true
   event_name.value = event.value.name
   description.value = event.value.description
   start_date.value = new Date(event.value.start_date).toISOString().slice(0, 16)
   end_date.value = new Date(event.value.end_date).toISOString().slice(0, 16)
 }
 
-const submitForm = () => {
-  if (end_date.value > new Date()) {
-    is_completed.value = false
-  }
-  else {
+function checkCompletionStatus(){
+  if (end_date.value < new Date()) {
     is_completed.value = true
   }
+  else {
+    is_completed.value = false
+  }
+}
 
+const submitForm = () => {
   if (isUpdate.value) {
     updateEvent()
   } else {

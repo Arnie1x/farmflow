@@ -34,7 +34,6 @@ async function getFarms() {
     if (error) {
       throw error
     }
-    console.log(data)
     farms.value = data
   } catch (error) {
     console.error(error)

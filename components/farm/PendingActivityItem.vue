@@ -28,7 +28,6 @@ function getDayDate(date) {
 
 function getTimeDate(date) {
   const time = new Date(date).toLocaleString('default', { hour: 'numeric', minute: 'numeric' });
-  console.log(time)
   return time
 }
 </script>
