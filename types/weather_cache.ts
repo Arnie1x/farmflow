@@ -45,6 +45,15 @@ class WeatherCache {
       updated_at: new Date()
     };
 
+    const {error: deleteError} = await client
+      .from('weather')
+      .delete()
+      .eq('location', JSON.stringify(location));
+
+    if (deleteError) {
+      throw deleteError;
+    }
+
     const { error: insertError } = await client
       .from('weather')
       .upsert([weatherData]);

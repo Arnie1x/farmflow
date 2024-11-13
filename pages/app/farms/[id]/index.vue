@@ -16,8 +16,8 @@
         <FarmAISummaryCard />
         <FarmPendingActivitiesCard />
       </div>
-      <div class="w-full h-full flex flex-col gap-2">
-        <FarmWeatherCard :latitude="farm.location.coordinates[1]" :longitude="farm.location.coordinates[0]"/>
+      <div class="w-full h-full grow flex flex-col gap-2">
+        <FarmWeatherCard :latitude="farm.location.coordinates[1]" :longitude="farm.location.coordinates[0]" :limit="15" />
         <FarmActivityLogsCard />
       </div>
     </div>

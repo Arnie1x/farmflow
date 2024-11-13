@@ -10,7 +10,7 @@
       <div class="w-full h-[4rem] flex flex-row justify-between items-center border-gray-300 border-b-2 p-5">
         <slot name="header" />
       </div>
-      <div class="p-5 overflow-y-auto w-full h-full">
+      <div class="p-5 overflow-y-auto overflow-x-hidden w-full h-full">
         <slot />
       </div>
     </div>
