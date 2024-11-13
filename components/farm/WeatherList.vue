@@ -1,10 +1,11 @@
 <template>
-  <div class="flex flex-col rounded-2xl border-2 p-5">
-    <div class="flex flex-row gap-2 justify-start items-center">
-      <NuxtImg src="/images/icons/weather.svg" alt="weather" class="w-[2.5rem]" />
-      <p class="text-3xl font-bold text-[#2B9B3C]">Forecast</p>
+  <div class="grow overflow-x-auto overscroll-none items-end">
+    <div class="flex gap-2 justify-start items-start pt-2 max-w-[1rem]">
+      <div v-for="weather in filteredWeatherData" :key="weather.id">
+        <FarmWeatherItem :weather="weather" />
+        <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Minus rem iusto magnam nam, minima maxime ab eius quidem culpa modi tenetur officia non dolorem reprehenderit perferendis, quibusdam laudantium similique. Corporis aperiam error odit exercitationem nihil pariatur optio quasi molestiae nisi voluptas! Tempora esse ullam ducimus dolor nemo voluptatum sequi repudiandae tenetur vel, reprehenderit provident, officia aspernatur nisi. Voluptas, iure velit.</p> -->
+      </div>
     </div>
-    <FarmWeatherList :latitude="props.latitude" :longitude="props.longitude" :limit="24" />
   </div>
 </template>
 
@@ -20,7 +21,7 @@ const props = defineProps({
     type: Number,
     required: true
   },
-  limit : {
+  limit: {
     type: Number,
     required: false,
     default: 5
@@ -59,6 +60,4 @@ function filterWeatherData(weatherData: any, limit: number): any[] {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
