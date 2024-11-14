@@ -26,16 +26,29 @@
 </template>
 
 <script lang="ts" setup>
+import { options } from '#build/eslint.config.mjs';
+
 const isUpdate = ref(false)
 const route = useRoute()
 const client = useSupabaseClient()
 const user = useSupabaseUser()
 
+const options = {
+  weekday: "short",
+  year: "numeric",
+  month: "short",
+  day: "numeric",
+};
+const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
+function localISOTime(date){ 
+  return (new Date(date - tzoffset)).toISOString().slice(0, 16);
+}
+
 const event = ref(null)
 const event_name = ref('')
 const description = ref('')
-const start_date = ref('')
-const end_date = ref(new Date().toISOString().slice(0, 16))
+const start_date = ref(localISOTime(new Date))
+const end_date = ref(localISOTime(new Date))
 const show_is_completed = ref(false)
 const is_completed = ref(false)
 const errorMsg = ref('')
@@ -51,12 +64,12 @@ if (isUpdate.value) {
   show_is_completed.value = true
   event_name.value = event.value.name
   description.value = event.value.description
-  start_date.value = new Date(event.value.start_date).toISOString().slice(0, 16)
-  end_date.value = new Date(event.value.end_date).toISOString().slice(0, 16)
+  start_date.value = localISOTime(start_date.value)
+  end_date.value = localISOTime(end_date.value)
 }
 
 function checkCompletionStatus(){
-  if (end_date.value < new Date()) {
+  if (new Date(end_date.value) < new Date()) {
     is_completed.value = true
   }
   else {
@@ -65,6 +78,8 @@ function checkCompletionStatus(){
 }
 
 const submitForm = () => {
+  start_date.value = new Date(start_date.value).toISOString()
+  end_date.value = new Date(end_date.value).toISOString()
   if (isUpdate.value) {
     updateEvent()
   } else {
