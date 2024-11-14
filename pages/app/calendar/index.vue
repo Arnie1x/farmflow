@@ -3,7 +3,7 @@
     <template #header>
       <h1 class="text-3xl font-bold">Calendar</h1>
     </template>
-    <div v-for="group in sortedGroupedEvents" :key="group.month" class="flex flex-col gap-3">
+    <div v-for="group in sortedGroupedEvents" :key="group.month" class="flex flex-col gap-3 pb-3">
       <p class="text-2xl font-bold">{{ group.month }}</p>
       <div v-for="event in group.events" :key="event.id">
         <CalendarItem :event="event" />

@@ -3,7 +3,7 @@ import axios from 'axios';
 interface WeatherData {
   location: { longitude: number; latitude: number };
   forecast_data: any; // assuming JSON format
-  updated_at: Date;
+  expires_at: Date;
 }
 
 class WeatherCache {
@@ -25,7 +25,10 @@ class WeatherCache {
     }
 
     if (data.length > 0) {
-      return data[0];
+      const weatherData = data[0];
+      if (weatherData.expires_at > new Date()) {
+        return weatherData;
+      }
     }
 
     const openWeatherMapResponse = await axios.get(`https://api.openweathermap.org/data/3.0/onecall`, {
@@ -42,7 +45,7 @@ class WeatherCache {
     const weatherData: WeatherData = {
       location,
       forecast_data: forecastData,
-      updated_at: new Date()
+      expires_at: new Date(Date.now() + 6 * 60 * 60 * 1000), // 6 hours from now
     };
 
     const {error: deleteError} = await client
@@ -56,7 +59,7 @@ class WeatherCache {
 
     const { error: insertError } = await client
       .from('weather')
-      .upsert([weatherData]);
+      .insert([weatherData]);
 
     if (insertError) {
       throw insertError;

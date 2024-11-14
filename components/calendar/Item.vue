@@ -20,7 +20,7 @@
     <div class="border h-[2.5rem] mx-4 xl:block hidden" />
     <div class="w-full">
       <p class="text-ellipsis line-clamp-2 w-full">
-        <b>{{ event.name }}: </b> <br>
+        <b>{{ event.name }} </b> <br>
         {{ event.description }}
       </p>
     </div>
