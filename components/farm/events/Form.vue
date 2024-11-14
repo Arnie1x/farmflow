@@ -26,19 +26,12 @@
 </template>
 
 <script lang="ts" setup>
-import { options } from '#build/eslint.config.mjs';
 
 const isUpdate = ref(false)
 const route = useRoute()
 const client = useSupabaseClient()
 const user = useSupabaseUser()
 
-const options = {
-  weekday: "short",
-  year: "numeric",
-  month: "short",
-  day: "numeric",
-};
 const tzoffset = (new Date()).getTimezoneOffset() * 60000; //offset in milliseconds
 function localISOTime(date){ 
   return (new Date(date - tzoffset)).toISOString().slice(0, 16);
@@ -64,8 +57,9 @@ if (isUpdate.value) {
   show_is_completed.value = true
   event_name.value = event.value.name
   description.value = event.value.description
-  start_date.value = localISOTime(start_date.value)
-  end_date.value = localISOTime(end_date.value)
+  start_date.value = localISOTime(new Date(event.value.start_date))
+  end_date.value = localISOTime(new Date(event.value.end_date))
+  is_completed.value = event.value.is_completed
 }
 
 function checkCompletionStatus(){
