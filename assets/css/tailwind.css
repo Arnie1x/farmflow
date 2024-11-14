@@ -13,8 +13,8 @@
 .textfield {
   /* min-width: 37.5rem; */
   width: 100%;
-  height: 100%;
-  max-height: 3.125rem;
+  /* height: 100%; */
+  min-height: 3.125rem;
   border-radius: 1rem;
   background-color: #848aa04D;
   /* color: #ffffff; */
