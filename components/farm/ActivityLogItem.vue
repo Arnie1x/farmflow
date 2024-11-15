@@ -3,14 +3,15 @@
     <div class="2xl:max-w-[16rem] w-full">
       <div class="flex flex-row justify-between w-full">
         <p class="text-xl text-ellipsis font-semibold">{{ event.name }}</p>
-      <NuxtLink :to="{ name: 'app-farms-id-events-event_id', params: { id: farmId, event_id: event.id } }"
-        class="link 2xl:hidden flex flex-row gap-3 justify-center items-center">
-        <p class="text-xl">Edit</p>
-        <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M17.5 5.25L10 12.75L2.5 5.25L1 6.75L10 15.75L19 6.75L17.5 5.25Z" fill="#104547" class="link-svg" />
-        </svg>
-      </NuxtLink>
-    </div>
+        <NuxtLink :to="{ name: 'app-farms-id-events-event_id', params: { id: farmId, event_id: event.id } }"
+          class="link 2xl:hidden flex flex-row gap-3 justify-center items-center">
+          <p class="text-xl">Edit</p>
+          <svg width="20" height="21" viewBox="0 0 20 21" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17.5 5.25L10 12.75L2.5 5.25L1 6.75L10 15.75L19 6.75L17.5 5.25Z" fill="#104547" class="link-svg" />
+          </svg>
+        </NuxtLink>
+      </div>
+      <p v-if="event.farm_name" class="font-semibold text-sm">{{ event.farm_name }}</p>
       <div class="flex flex-row gap-2">
         <p class="text-[#848AA0] font-semibold text-sm w-10">From:</p>
         <p class="text-[#848AA0] font-semibold text-sm">{{ dateFormatter(event.start_date) }}</p>
@@ -44,10 +45,15 @@ const props = defineProps({
     type: Boolean,
     required: false,
     default: false
+  },
+  showFarmName: {
+    type: Boolean,
+    required: false,
+    default: false
   }
 })
 
-const farmId = useRoute().params.id
+const farmId = props.event.farm_id
 
 function dateFormatter(date) {
   const currentDate = new Date()
