@@ -9,9 +9,10 @@
         </div>
         <p v-if="loading" class="text-sm font-bold px-5 animate-pulse">Loading...</p>
         <form class="flex flex-row gap-3 h-min" @submit.prevent="sendMessage">
-          <textarea v-model="prompt" class="w-full textfield" placeholder="Start Typing" rows="1"/>
-          <button type="submit" class="button max-w-[3.5rem] max-h-[3.5rem]">
-            <NuxtImg src="/images/icons/send.svg" alt="send" class="w-full p-3" />
+          <textarea v-model="prompt" class="w-full textfield" placeholder="Start Typing" rows="1" :disabled="loading" />
+          <button v-auto-animate type="submit" class="button max-w-[3.5rem] max-h-[3.5rem]">
+            <NuxtImg v-if="!loading" src="/images/icons/send.svg" alt="send" class="w-full p-3" />
+            <NuxtImg v-else src="/images/icons/loading.svg" alt="send" class="w-full p-3 animate-spin" />
           </button>
         </form>
       </div>
@@ -44,11 +45,8 @@ if (chatService.hasChatID()) {
 messages.value = chatService.messages
 
 if (query.prompt) {
-  loading.value = true
-  await chatService.sendMessage(query.prompt)
-  // latestMessages.push(await chatService.sendMessage(query.prompt))
-  // messages.value.push(...latestMessages)
-  loading.value = false
+  prompt.value = query.prompt
+  await sendMessage()
 }
 
 async function sendMessage() {

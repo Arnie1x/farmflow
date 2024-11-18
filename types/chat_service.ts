@@ -72,7 +72,7 @@ class ChatService {
       const result = await this.gradioClient.predict("/chat", {
         message: userMessage,
         system_message: this.systemMessage,
-        max_tokens: 512,
+        max_tokens: 2048,
         temperature: 0.7,
         top_p: 0.95,
       });
@@ -170,7 +170,7 @@ class ChatService {
 
       const title = result.data[0];
 
-      const { data, error: chatError } = await this.client.from("chats").insert({ user_id: userId, title: title }).select();
+      const { data, error: chatError } = await this.client.from("chats").insert({ user_id: this.userId, title: title }).select();
 
       if (chatError) {
         throw chatError;
