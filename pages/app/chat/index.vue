@@ -12,7 +12,6 @@ definePageMeta({
   middleware: 'auth'
 })
 
-const prompt = ref('')
 </script>
 
 <style scoped>

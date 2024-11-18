@@ -1,5 +1,5 @@
 <template>
-  <NuxtLink class="chat-link p-2 rounded-xl">
+  <NuxtLink :to="'/app/chat/' + id" class="chat-link p-2 rounded-xl">
     <p class="text-ellipsis line-clamp-1">{{ title }}</p>
   </NuxtLink>
 </template>

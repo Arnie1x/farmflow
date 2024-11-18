@@ -2,14 +2,14 @@
   <div v-if="isUser" class="w-full flex justify-end">
     <div class="flex flex-col w-fit h-full">
       <div class="w-full max-w-[38rem] h-fit p-5 bg-[#848AA04D] rounded-2xl">
-        <p>{{ message }}</p>
+        <p class="whitespace-pre-line">{{ message }}</p>
       </div>
     </div>
   </div>
   <div v-else class="w-full flex justify-start">
     <div class="flex flex-col w-fit h-full">
       <div class="w-full xl:max-w-[38rem] h-fit p-5">
-        <p>{{ message }}</p>
+        <p class="whitespace-pre-line">{{ message }}</p>
       </div>
     </div>
   </div>
