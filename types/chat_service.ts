@@ -126,7 +126,7 @@ class ChatService {
 
   public async getAllChats(): Promise<any> {
     try {
-      const { data, error: dataError } = await this.client.from("chats").select("*");
+      const { data, error: dataError } = await this.client.from("chats").select("*").order('updated_at', { ascending: false });
 
       if (dataError) {
         throw dataError;
@@ -141,9 +141,23 @@ class ChatService {
 
   public async createChat(userMessage: string): Promise<string> {
     const customSystemMessage = `
-    You are a Text Summarizer. Your job is to create one concise and appropriate summary for each message sent by the user into one concise statement that's around 3-10 words. You only reply with the one sentence summary and nothing else.
+    Your role is to create a concise and appropriate title for each chat session based on the user's initial message. The title should capture the main idea or topic of the prompt in a clear and general way. Keep the titles short (ideally 3-6 words) and relevant to the content of the user's question or statement.
 
-    When generating, focus on summarizing the main subject or theme without being too specific. For example, if the user message is "What fertilizers should I use for better rice yield?", an appropriate summary could be "Fertilizer Recommendations" or "Improving Rice Yield".
+    When generating a title, focus on summarizing the main subject or theme without being too specific. For example, if the first user message is "What fertilizers should I use for better rice yield?", an appropriate title could be "Fertilizer Recommendations" or "Improving Rice Yield".
+
+    Ensure the title is informative and straightforward so users can easily identify the topic of the conversation. Avoid overly technical terms or complex language. Your goal is to create titles that help users quickly understand what the chat is about at a glance.
+
+    **Example guidelines**:
+    - Original message: "How do I control pests in my rice field?"
+      Generated title: "Pest Control Tips"
+    - Original message: "Can you tell me about optimal planting times?"
+      Generated title: "Optimal Planting Times"
+    - Original message: "What are the best practices for soil preparation?"
+      Generated title: "Soil Preparation Practices"
+
+    Keep your titles user-friendly and relevant to the initial question or statement.
+
+    Only return your chosen title and nothing else.
     `;
     try {
       const result = await this.gradioClient.predict("/chat", {
