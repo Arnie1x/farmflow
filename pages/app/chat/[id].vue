@@ -7,16 +7,10 @@
   </NuxtLayout>
 </template>
 
-<script setup lang="ts">
-definePageMeta({
-  middleware: 'auth'
-})
+<script lang="ts" setup>
 
-const prompt = ref('')
 </script>
 
-<style scoped>
-textarea {
-  resize: none;
-}
+<style>
+
 </style>
