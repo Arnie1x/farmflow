@@ -46,19 +46,20 @@ messages.value = chatService.messages
 
 if (query.prompt && messages.value.length === 0) {
   prompt.value = query.prompt
+  loading.value = true
   await sendMessage()
 }
 
 async function sendMessage() {
   if (!prompt.value) return
-
+  
+  loading.value = true
   if (!route.params.id) {
     chatId.value = await chatService.createChat(prompt.value)
     navigateTo('/app/chat/' + chatId.value + "?prompt=" + prompt.value)
     return
   }
 
-  loading.value = true
   await chatService.sendMessage(prompt.value)
   messages.value = chatService.messages
   // console.log(chatService.messages)

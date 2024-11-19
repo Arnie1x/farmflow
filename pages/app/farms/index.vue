@@ -11,9 +11,8 @@
         <p class="text-xl">Create</p>
       </NuxtLink>
     </template>
-    <div v-for="farm in farms" :key="farm['id']"
-      class="w-full h-content grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-2">
-      <FarmCard :farm="farm" />
+    <div class="w-full h-content grid xl:grid-cols-3 lg:grid-cols-2 grid-cols-1 gap-2">
+      <FarmCard v-for="farm in farms" :key="farm['id']" :farm="farm" />
     </div>
   </NuxtLayout>
 </template>

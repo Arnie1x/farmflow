@@ -7,7 +7,7 @@
     <div v-if="events.length > 0" v-for="event in events" :key="event.id" class="flex flex-col gap-3">
       <FarmActivityLogItem :event="event" />
     </div>
-    <p v-else class="text-lg">No Activity Logs, click on <b>View More</b> to create an event log</p>
+    <p v-else-if="isFarmPage" class="text-lg">No Activity Logs, click on <b>View More</b> to create an event log</p>
     <NuxtLink v-if="!isEventPage" :to="{ name: 'app-farms-id-events', params: { id: farmId } }"
       class="link h-min w-full font-bold">View More</NuxtLink>
   </div>
@@ -18,10 +18,14 @@
 const route = useRoute()
 const client = useSupabaseClient()
 const isEventPage = ref(false)
+const isFarmPage = ref(false)
 
 const farmId = route.params.id
 const events = await getEvents()
 
+if (route.path.includes('farms')) {
+  isFarmPage.value = true
+}
 if (route.path.includes('events')) {
   isEventPage.value = true
 }
