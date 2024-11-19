@@ -9,7 +9,7 @@
   <div v-else class="w-full flex justify-start">
     <div class="flex flex-col w-fit h-full">
       <div class="w-full xl:max-w-[38rem] h-fit p-5">
-        <p class="whitespace-pre-line">{{ message }}</p>
+        <p class="whitespace-pre-line"><MDC :value="message" tag="ai-response" /></p>
       </div>
     </div>
   </div>

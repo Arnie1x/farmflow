@@ -11,7 +11,8 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxtjs/supabase',
     '@nuxt/eslint',
-    '@formkit/auto-animate/nuxt'
+    '@formkit/auto-animate/nuxt',
+    '@nuxtjs/mdc'
   ],
   supabase: {
     redirect: false,
