@@ -44,7 +44,7 @@ if (chatService.hasChatID()) {
 }
 messages.value = chatService.messages
 
-if (query.prompt) {
+if (query.prompt && messages.value.length === 0) {
   prompt.value = query.prompt
   await sendMessage()
 }

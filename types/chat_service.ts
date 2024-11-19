@@ -1,7 +1,7 @@
 import { Client } from "@gradio/client";
 
 class ChatService {
-  private gradioClient: any;
+  private gradioClient: any = null;
   private client: any;
   private systemMessage: string;
   private chatId: string;
@@ -10,7 +10,7 @@ class ChatService {
   public messages: any;
   
   constructor() {
-    this.init();
+    // this.connect();
     this.client = useSupabaseClient();
     this.userId = useSupabaseUser().value?.id ?? '';
     this.chatId = '';
@@ -38,9 +38,11 @@ class ChatService {
     `;
   }
   
-  private async init() {
+  private async connect() {
+    if (this.gradioClient !== null) {
+      return
+    }
     try {
-      
       this.gradioClient = await Client.connect("arnie1x/farmflow", {hf_token: useRuntimeConfig().public.huggingFaceApiToken});
     } catch (error) {
       console.error("Error connecting to the Gradio client:", error);
@@ -56,6 +58,7 @@ class ChatService {
     }
   }
   public async sendMessage(userMessage: string): Promise<void> {
+    await this.connect()
     try {
       // Create user message in the database but do not commit until AI response is confirmed
       const newMessage = {
@@ -140,6 +143,7 @@ class ChatService {
   }
 
   public async createChat(userMessage: string): Promise<string> {
+    await this.connect()
     const customSystemMessage = `
     Your role is to create a concise and appropriate title for each chat session based on the user's initial message. The title should capture the main idea or topic of the prompt in a clear and general way. Keep the titles short (ideally 3-6 words) and relevant to the content of the user's question or statement.
 
