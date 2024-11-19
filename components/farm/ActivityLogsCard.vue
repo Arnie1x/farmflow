@@ -4,10 +4,10 @@
       <NuxtImg src="/images/icons/logs.svg" alt="weather" class="w-[1.75rem] mx-2" />
       <p class="text-3xl font-bold text-[#104547]">Event Logs</p>
     </div>
-    <div v-for="event in events" :key="event.id" class="flex flex-col gap-3">
-      <!-- <p class="text-2xl font-bold text-[#104547]">No Activity Logs</p> -->
+    <div v-if="events.length > 0" v-for="event in events" :key="event.id" class="flex flex-col gap-3">
       <FarmActivityLogItem :event="event" />
     </div>
+    <p v-else class="text-lg">No Activity Logs, click on <b>View More</b> to create an event log</p>
     <NuxtLink v-if="!isEventPage" :to="{ name: 'app-farms-id-events', params: { id: farmId } }"
       class="link h-min w-full font-bold">View More</NuxtLink>
   </div>

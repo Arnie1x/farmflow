@@ -12,9 +12,9 @@
           <NuxtImg src="/images/icons/location.svg" alt="location" class="w-[1.25rem]" />
           <p class="text-base font-bold text-[#848AA0]">{{ farm['location']['full_address'].split(',').reverse()[1] }}</p>
         </div>
-        <div class="flex flex-row gap-2 justify-start items-center h-full">
+        <div v-if="eventCount > 0" class="flex flex-row gap-2 justify-start items-center h-full">
           <NuxtImg src="/images/icons/alert.svg" alt="location" class="w-[1.25rem]" />
-          <p v-if="eventCount > 0" class="text-base font-bold text-[#D36135]">{{ eventCount }} Activities Pending</p>
+          <p class="text-base font-bold text-[#D36135]">{{ eventCount }} Activities Pending</p>
         </div>
       </div>
     </div>
