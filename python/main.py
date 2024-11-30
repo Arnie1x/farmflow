@@ -1,33 +1,40 @@
-from contextlib import asynccontextmanager
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from pydantic import BaseModel
 from document_processing import load_documents, build_vector_store, create_qa_chain
 import uvicorn
 
-# Load resources at startup
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    global qa_chain
-    documents = load_documents("assets/converted_texts")
-    vector_store = build_vector_store(documents)
-    # Specify the desired model from HuggingFace
-    qa_chain = create_qa_chain(vector_store, model_name="bert-base-uncased")  # Change this to the model you prefer
-    yield
-    
-# FastAPI app setup
-app = FastAPI(lifespan=lifespan)
+from dotenv import load_dotenv
+load_dotenv()
 
-# Pydantic model for request body
+app = FastAPI()
+
+# Dependency for the QA chain
+async def get_qa_chain():
+    try:
+        documents = load_documents("assets/converted_texts")
+        vector_store = build_vector_store(documents)
+        qa_chain = create_qa_chain(
+            vector_store,
+            endpoint_url="https://api-inference.huggingface.co/models/distilbert-base-uncased",
+        )
+        return qa_chain
+    except Exception as e:
+        raise RuntimeError(f"Error initializing QA chain: {e}")
+
 class Query(BaseModel):
     question: str
 
 @app.post("/ask")
-async def ask_question(query: Query):
+async def ask_question(query: Query, qa_chain=Depends(get_qa_chain)):
     try:
-        answer = qa_chain.run(query.question)
-        return {"answer": answer}
+        answer = qa_chain.invoke({"input": query.question})
+        return {"answer": answer["output"]}
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing query: {str(e)}")
+        print(e)
+        if "Model too busy" in str(e):
+            return {"answer": "The model is currently overloaded. Please try again later."}
+        raise HTTPException(status_code=500, detail=f"Error processing query: {e}")
+
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8000)
