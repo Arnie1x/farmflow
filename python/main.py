@@ -27,8 +27,11 @@ class Query(BaseModel):
 @app.post("/ask")
 async def ask_question(query: Query, qa_chain=Depends(get_qa_chain)):
     try:
-        answer = qa_chain.invoke({"input": query.question})
-        return {"answer": answer["output"]}
+        print(query.question)
+        answer = qa_chain.invoke(
+            query.question
+        )
+        return {"answer": answer["answer"]}
     except Exception as e:
         print(e)
         if "Model too busy" in str(e):
