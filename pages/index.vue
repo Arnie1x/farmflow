@@ -6,6 +6,8 @@
 definePageMeta({
   middleware: 'auth'
 })
+
+navigateTo('/app')
 </script>
 
 <style></style>
