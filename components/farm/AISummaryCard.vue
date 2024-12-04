@@ -4,11 +4,41 @@
       <NuxtImg src="/images/icons/ai.svg" alt="ai" class="w-[2rem]" />
       <h1 class="text-3xl font-bold text-[#058ED9]">AI Summary</h1>
     </div>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Fuga iste nemo optio omnis, placeat temporibus in ipsam earum dignissimos voluptatum veniam dolores voluptatem eos provident soluta? Sunt, quisquam exercitationem. Tempora sequi nemo doloremque tempore, corporis culpa magnam perferendis reprehenderit ab, ad cupiditate, dolorum distinctio minima reiciendis expedita facilis? Suscipit, rem?</p>
+    <p v-if="summary !== ''" class="">{{ summary }}</p>
+    <p v-else-if="loading" class="text-xl">Generating Summary... <span class="animate-spin">⠋</span></p>
+    <p v-else class="text-lg">There is insufficient data to create your personalized summary. Please begin recording activities for the Summary creation to begin.</p>
   </div>
 </template>
 
 <script lang="ts" setup>
+import ChatService from '~/types/chat_service';
+const props = defineProps({
+  id: {
+    type: String,
+    required: true
+  }
+})
+
+const chatService = new ChatService()
+const summary = ref('')
+const loading = ref(true)
+
+onMounted(async () => {
+  summary.value = await getAISummary()
+})
+
+async function getAISummary() {
+  try {
+    loading.value = true
+    const farmSummary = await chatService.getFarmAISummary(props.id)
+    loading.value = false
+    return farmSummary
+  } catch (error) {
+    loading.value = false
+    console.log(error)
+    return ''
+  }
+}
 
 </script>
 
