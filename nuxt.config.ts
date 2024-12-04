@@ -17,6 +17,15 @@ export default defineNuxtConfig({
   supabase: {
     redirect: false,
   },
+  image: {
+    domains: ['openweathermap.org'], // Allow OpenWeatherAPI images to be used directly
+    providers: {
+      openWeather: {
+        name: 'openWeather',
+        provider: 'static',
+      },
+    },
+  },
   runtimeConfig: {
     // The private keys which are only available within server-side
     // mapboxAccessToken: '',
