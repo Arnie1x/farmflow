@@ -1,5 +1,6 @@
 import { Client } from "@gradio/client";
 import WeatherCache from "./weather_cache";
+import axios from "axios";
 
 class ChatService {
   private gradioClient: any = null;
@@ -79,15 +80,22 @@ class ChatService {
       // this.messages.push(newMessage);
 
       // Send the message to the Gradio app
-      const result = await this.gradioClient.predict("/chat", {
-        message: userMessage,
-        system_message: this.systemMessage,
-        max_tokens: 2048,
-        temperature: 0.7,
-        top_p: 0.95,
-      });
+      // const result = await this.gradioClient.predict("/chat", {
+      //   message: userMessage,
+      //   system_message: this.systemMessage,
+      //   max_tokens: 2048,
+      //   temperature: 0.7,
+      //   top_p: 0.95,
+      // });
+      // axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
+      const result = await axios.post("http://localhost:8000/ask", 
+        {
+          "question": userMessage
+        }
+      );
+      console.log(result.data);
 
-      const aiResponse = result.data[0];
+      const aiResponse = result.data.answer;
 
       // Store the AI response in the database
       const aiMessage = {
