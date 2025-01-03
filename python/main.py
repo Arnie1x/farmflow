@@ -43,10 +43,9 @@ embeddings = HuggingFaceEmbeddings(model_name=os.getenv("EMBEDDINGS_MODEL", "sen
 db = FAISS.from_documents(texts, embeddings)
 print('Database Loaded')
 
-retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": 2})
 
 repo_id="HuggingFaceH4/zephyr-7b-beta"
-llm=HuggingFaceEndpoint(repo_id=repo_id,max_new_tokens=2048,temperature=0.7)
+llm=HuggingFaceEndpoint(repo_id=repo_id,max_new_tokens=1024,temperature=0.7)
 
 prompt_template = """
 You are FarmFlow, an AI assistant designed to provide practical, easy-to-understand advice for rice farmers. Your role is to help farmers make informed decisions to enhance crop health, boost yield, and reduce costs.  
@@ -80,6 +79,7 @@ PROMPT = PromptTemplate(
  template=prompt_template, input_variables=["context", "question"]
 )
 
+retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": 2})
 retrievalQA = RetrievalQA.from_chain_type(
     llm=llm,
     chain_type="stuff",
@@ -91,12 +91,19 @@ print('LLM and Retrieval QA Chain Loaded')
 
 class Query(BaseModel):
     question: str
+    context: str
+    
+def combine_query(query: Query):
+    question = query.question
+    question = question + "\n\n" + query.context
+    return question
 
 @app.post("/ask")
 async def ask_question(query: Query):
     try:
         print(query.question)
-        result = retrievalQA.invoke({"query": query.question})
+        question = combine_query(query)
+        result = retrievalQA.invoke({"query": question})
         return {"answer": result['result']}
     except Exception as e:
         print(e)

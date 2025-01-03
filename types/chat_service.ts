@@ -43,7 +43,7 @@ class ChatService {
 
   private async getWeatherData(location: { longitude: number; latitude: number }) {
     const weatherCache = new WeatherCache(useRuntimeConfig().public.openWeatherMapApiKey);
-    return await weatherCache.getWeatherData({ longitude: 0, latitude: 0 });
+    return await weatherCache.getWeatherData({ longitude: location.longitude, latitude: location.latitude });
   }
 
   private async connect() {
@@ -65,9 +65,44 @@ class ChatService {
       return true;
     }
   }
-  public async sendMessage(userMessage: string): Promise<void> {
+
+  private async processFarmData(farmId?: string | null): Promise<string> {
+    try {
+      if (farmId === null || farmId === undefined || farmId === '-1') {
+        return "";
+      }
+      let { data: farmData, error: farmError } = await this.client.from("farms").select("*").eq("id", farmId).single();
+      if (farmError) {
+        throw farmError;
+      }
+      // const farmData = data;
+  
+      let { data: eventsData, error: eventsError } = await this.client.from("events").select("*").eq("farm_id", farmId);
+      if (eventsError) {
+        throw eventsError;
+      }
+      // const eventsData = data;
+  
+      const farmDataString = `
+      **Rice Farm Data:**
+      Farm Name: ${farmData.name}
+      Location: ${farmData.location}
+      Farm Activities: ${JSON.stringify(eventsData)}
+      Hourly Weather: ${JSON.stringify(this.formatHourlyWeather(await this.getWeatherData({ longitude: farmData.location.coordinates[0], latitude: farmData.location.coordinates[1] })))}
+      `;
+  
+      return farmDataString;
+    } catch (error) {
+      console.error("Error processing farm data:", error);
+      throw error;
+    }
+  }
+
+  public async sendMessage(userMessage: string, farmId?: string | null): Promise<void> {
     await this.connect()
     try {
+      const farmData = await this.processFarmData(farmId);
+      console.log(userMessage);
       // Create user message in the database but do not commit until AI response is confirmed
       const newMessage = {
         chat_id: this.chatId,
@@ -90,7 +125,8 @@ class ChatService {
       // axios.defaults.headers.post['Content-Type'] ='application/x-www-form-urlencoded';
       const result = await axios.post("http://localhost:8000/ask", 
         {
-          "question": userMessage
+          "question": userMessage,
+          "context": farmData
         }
       );
       console.log(result.data);
@@ -241,6 +277,24 @@ class ChatService {
     }
   }
 
+  private formatHourlyWeather(weather: any, length=5): any[] {
+    const formattedHourlyWeather: any[] = [];
+    for (const hourlyWeather of weather.forecast_data.hourly) {
+      if (formattedHourlyWeather.length > length) {
+        break
+      }
+      const newWeather = {
+        dt: this.getDate(hourlyWeather.dt),
+        temp: hourlyWeather.temp,
+        clouds: hourlyWeather.clouds,
+        weatherMain: hourlyWeather.weather[0].main,
+        weatherDescription: hourlyWeather.weather[0].description,
+      };
+      formattedHourlyWeather.push(newWeather);
+    }
+    return formattedHourlyWeather
+  }
+
   private async generateSummary(farm: any, weather: any, events: any): Promise<string> {
     await this.connect()
     const customSystemMessage = `
@@ -254,20 +308,8 @@ class ChatService {
     Your response should be concise yet insightful, highlighting any patterns or anomalies in the weather that may impact farm activities. 
     Use clear, farmer-friendly language and focus on actionable insights if possible.
     `;
-    const formattedHourlyWeather: any[] = [];
-    for (const hourlyWeather of weather.forecast_data.hourly) {
-      if (formattedHourlyWeather.length > 5) {
-        break
-      }
-      const newWeather = {
-        dt: this.getDate(hourlyWeather.dt),
-        temp: hourlyWeather.temp,
-        clouds: hourlyWeather.clouds,
-        weatherMain: hourlyWeather.weather[0].main,
-        weatherDescription: hourlyWeather.weather[0].description,
-      };
-      formattedHourlyWeather.push(newWeather);
-    }
+    const formattedHourlyWeather: any[] = this.formatHourlyWeather(weather);
+    
     const userMessage = `
     Farm Name: ${farm.name}
     Location: ${farm.location}
