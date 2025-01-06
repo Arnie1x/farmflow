@@ -5,7 +5,7 @@
       <h1 class="text-3xl font-bold text-[#058ED9]">AI Summary</h1>
     </div>
     <p v-if="summary !== ''" class="">{{ summary }}</p>
-    <p v-else-if="loading" class="text-xl">Generating Summary... <span class="animate-spin">⠋</span></p>
+    <p v-else-if="loading" class="text-xl animate-pulse">Generating Summary. Please wait... </p>
     <p v-else class="text-lg">There is insufficient data to create your personalized summary. Please begin recording activities for the Summary creation to begin.</p>
   </div>
 </template>

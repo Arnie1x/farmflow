@@ -41,9 +41,9 @@ class ChatService {
     `;
   }
 
-  private async getWeatherData(location: { longitude: number; latitude: number }) {
+  private async getWeatherData(longitude: number, latitude: number) {
     const weatherCache = new WeatherCache(useRuntimeConfig().public.openWeatherMapApiKey);
-    return await weatherCache.getWeatherData({ longitude: location.longitude, latitude: location.latitude });
+    return await weatherCache.getWeatherData({ longitude: longitude, latitude: latitude });
   }
 
   private async connect() {
@@ -88,7 +88,7 @@ class ChatService {
       Farm Name: ${farmData.name}
       Location: ${farmData.location}
       Farm Activities: ${JSON.stringify(eventsData)}
-      Hourly Weather: ${JSON.stringify(this.formatHourlyWeather(await this.getWeatherData({ longitude: farmData.location.coordinates[0], latitude: farmData.location.coordinates[1] })))}
+      Hourly Weather: ${JSON.stringify(this.formatHourlyWeather(await this.getWeatherData(farmData.location.coordinates[0], farmData.location.coordinates[1] )))}
       `;
   
       return farmDataString;
@@ -196,35 +196,38 @@ class ChatService {
 
   public async createChat(userMessage: string): Promise<string> {
     await this.connect()
-    const customSystemMessage = `
-    Your role is to create a concise and appropriate title for each chat session based on the user's initial message. The title should capture the main idea or topic of the prompt in a clear and general way. Keep the titles short (ideally 3-6 words) and relevant to the content of the user's question or statement.
+    // const customSystemMessage = `
+    // Your role is to create a concise and appropriate title for each chat session based on the user's initial message. The title should capture the main idea or topic of the prompt in a clear and general way. Keep the titles short (ideally 3-6 words) and relevant to the content of the user's question or statement.
 
-    When generating a title, focus on summarizing the main subject or theme without being too specific. For example, if the first user message is "What fertilizers should I use for better rice yield?", an appropriate title could be "Fertilizer Recommendations" or "Improving Rice Yield".
+    // When generating a title, focus on summarizing the main subject or theme without being too specific. For example, if the first user message is "What fertilizers should I use for better rice yield?", an appropriate title could be "Fertilizer Recommendations" or "Improving Rice Yield".
 
-    Ensure the title is informative and straightforward so users can easily identify the topic of the conversation. Avoid overly technical terms or complex language. Your goal is to create titles that help users quickly understand what the chat is about at a glance.
+    // Ensure the title is informative and straightforward so users can easily identify the topic of the conversation. Avoid overly technical terms or complex language. Your goal is to create titles that help users quickly understand what the chat is about at a glance.
 
-    **Example guidelines**:
-    - Original message: "How do I control pests in my rice field?"
-      Generated title: "Pest Control Tips"
-    - Original message: "Can you tell me about optimal planting times?"
-      Generated title: "Optimal Planting Times"
-    - Original message: "What are the best practices for soil preparation?"
-      Generated title: "Soil Preparation Practices"
+    // **Example guidelines**:
+    // - Original message: "How do I control pests in my rice field?"
+    //   Generated title: "Pest Control Tips"
+    // - Original message: "Can you tell me about optimal planting times?"
+    //   Generated title: "Optimal Planting Times"
+    // - Original message: "What are the best practices for soil preparation?"
+    //   Generated title: "Soil Preparation Practices"
 
-    Keep your titles user-friendly and relevant to the initial question or statement.
+    // Keep your titles user-friendly and relevant to the initial question or statement.
 
-    Only return your chosen title and nothing else.
-    `;
+    // Only return your chosen title and nothing else.
+    // `;
     try {
-      const result = await this.gradioClient.predict("/chat", {
-        message: userMessage,
-        system_message: customSystemMessage,
-        max_tokens: 512,
-        temperature: 0.4,
-        top_p: 0.95,
-      });
+      // const result = await this.gradioClient.predict("/chat", {
+      //   message: userMessage,
+      //   system_message: customSystemMessage,
+      //   max_tokens: 512,
+      //   temperature: 0.4,
+      //   top_p: 0.95,
+      // });
+      const result = await axios.post("http://localhost:8000/generate-title", {
+        "question": userMessage,
+      })
 
-      const title = result.data[0];
+      const title = result.data.answer;
 
       const { data, error: chatError } = await this.client.from("chats").insert({ user_id: this.userId, title: title }).select();
 
@@ -246,13 +249,15 @@ class ChatService {
       }
       const farm = data;
 
-      // Check if the AI summary is recent (within the last 12 hours)
-      const aiSummaryUpdatedAt = farm.ai_summary_updated_at;
-      const now = new Date();
-      const twelveHoursFromNow = new Date(new Date().getTime() + 12 * 60 * 60 * 1000)
-      if (aiSummaryUpdatedAt && now < twelveHoursFromNow) {
-        // If the AI summary is recent, return it directly
-        return farm.ai_summary;
+      if (farm.ai_summary_updated_at) {
+        // Check if the AI summary is recent (within the last 12 hours)
+        const aiSummaryUpdatedAt = new Date(farm.ai_summary_updated_at);
+        const now = new Date();
+        const twelveHoursAgo = new Date(now.getTime() - 12 * 60 * 60 * 1000); // Calculate 12 hours ago
+        if (aiSummaryUpdatedAt >= twelveHoursAgo) { // Check if updated within the last 12 hours
+          // If the AI summary is recent, return it directly
+          return farm.ai_summary;
+        }
       }
 
       // Get Events Data
@@ -260,16 +265,17 @@ class ChatService {
       if (messagesError) {
         throw messagesError;
       }
-
       if (eventsData.length < 3) {
         return "";
       }
 
       // Get Weather Data
-      const weather = await this.getWeatherData({ longitude: farm.longitude, latitude: farm.latitude });
+      const weather = await this.getWeatherData(farm.location.coordinates[0], farm.location.coordinates[1]);
 
       // Generate Summary
+      console.log("Generating Summary...")
       const summary = await this.generateSummary(farm, weather, eventsData);
+      console.log("Generated Summary:", summary)
       return summary;
     }
     catch (error) {
@@ -298,17 +304,17 @@ class ChatService {
 
   private async generateSummary(farm: any, weather: any, events: any): Promise<string> {
     await this.connect()
-    const customSystemMessage = `
-    You are FarmFlow, a trusted AI assistant for rice farming. 
-    You are designed to provide concise, easy-to-understand answers and practical advice on all aspects of rice farming. 
-    Your role is to help farmers make informed decisions that can enhance crop health, increase yield, and reduce costs.
+    // const customSystemMessage = `
+    // You are FarmFlow, a trusted AI assistant for rice farming. 
+    // You are designed to provide concise, easy-to-understand answers and practical advice on all aspects of rice farming. 
+    // Your role is to help farmers make informed decisions that can enhance crop health, increase yield, and reduce costs.
 
-    You will receive information about a farm, including its name, location, farm activities/events, and weather data such as current temperature and the forecast for the next few hours. 
-    Summarize this information into one short, easy-to-understand paragraph for the farmer. 
-    Use the Farm Activities and Weather Data to provide insights and recommendations for the farmer and find any relations/critique between the activities carried out and the weather.
-    Your response should be concise yet insightful, highlighting any patterns or anomalies in the weather that may impact farm activities. 
-    Use clear, farmer-friendly language and focus on actionable insights if possible.
-    `;
+    // You will receive information about a farm, including its name, location, farm activities/events, and weather data such as current temperature and the forecast for the next few hours. 
+    // Summarize this information into one short, easy-to-understand paragraph for the farmer. 
+    // Use the Farm Activities and Weather Data to provide insights and recommendations for the farmer and find any relations/critique between the activities carried out and the weather.
+    // Your response should be concise yet insightful, highlighting any patterns or anomalies in the weather that may impact farm activities. 
+    // Use clear, farmer-friendly language and focus on actionable insights if possible.
+    // `;
     const formattedHourlyWeather: any[] = this.formatHourlyWeather(weather);
     
     const userMessage = `
@@ -318,14 +324,17 @@ class ChatService {
     Hourly Weather: ${JSON.stringify(formattedHourlyWeather)}
     `;
     try {
-      const result = await this.gradioClient.predict("/chat", {
-        message: userMessage,
-        system_message: customSystemMessage,
-        max_tokens: 1024,
-        temperature: 0.7,
-        top_p: 0.95,
-      });
-      const summary = result.data[0];
+      // const result = await this.gradioClient.predict("/chat", {
+      //   message: userMessage,
+      //   system_message: customSystemMessage,
+      //   max_tokens: 1024,
+      //   temperature: 0.7,
+      //   top_p: 0.95,
+      // });
+      const result = await axios.post("http://localhost:8000/generate-summary", {
+        "message": userMessage
+      })
+      const summary = result.data.answer;
       // Update the Farms table with the AI summary
       const { error: updateError } = await this.client
       .from("farms")
