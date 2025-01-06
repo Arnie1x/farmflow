@@ -72,7 +72,7 @@ if (query.prompt && messages.value.length === 0) {
     console.log(selectedFarm)
     setFarm(selectedFarm)
   }
-  loading.value = true
+  // loading.value = true
   await sendMessage()
 }
 
