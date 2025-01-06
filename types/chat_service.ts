@@ -126,7 +126,8 @@ class ChatService {
       const result = await axios.post("http://localhost:8000/ask", 
         {
           "question": userMessage,
-          "context": farmData
+          "context": farmData,
+          "messages": this.messages
         }
       );
       console.log(result.data);
