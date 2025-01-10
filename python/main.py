@@ -139,6 +139,7 @@ async def ask_question(query: ChatQuery):
         
         for message in query.messages:
             messages.append({
+                # ? :: Check if message["is_user"] is actually being parsed correctly
                 "role": "user" if message["is_user"] else "assistant",
                 "content": message["message"]
             })
