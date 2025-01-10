@@ -22,6 +22,3 @@ logs
 .env
 .env.*
 !.env.example
-
-/assets/pdfs/*
-/assets/converted_texts/*

@@ -105,17 +105,17 @@ To set up the database, follow these steps:
 ## Screenshots
 
 ### Sign In
-![Sign In](assets/screenshots/sign%20in.png)
+![Sign In](public/screenshots/sign%20in.png)
 
 ### Dashboard
-![Dashboard](assets/screenshots/dashboard.png)
+![Dashboard](public/screenshots/dashboard.png)
 
 ### Chat Page
-![Chat](assets/screenshots/chat.png)
+![Chat](public/screenshots/chat.png)
 
 ### Farm Page
-![Farm](assets/screenshots/farm.png)
+![Farm](public/screenshots/farm.png)
 
 ### FAQ Page
-![FAQ](assets/screenshots/faq.png)
+![FAQ](public/screenshots/faq.png)
 ```
