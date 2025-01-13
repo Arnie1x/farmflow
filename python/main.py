@@ -122,7 +122,7 @@ def combine_query(query: ChatQuery):
     question = question + "\n\n" + query.context
     return question
 
-model="Qwen/Qwen2.5-Coder-32B-Instruct"
+model="mistralai/Mistral-7B-Instruct-v0.3"
 client = InferenceClient(api_key=os.getenv("HUGGINGFACEHUB_API_TOKEN"))
 
 def get_documents_system_message(documents):
@@ -133,20 +133,20 @@ async def ask_question(query: ChatQuery):
     try:
         print("Processing query...")
         
+        question = query.combine_query_context()
+        documents = retriever.invoke(question)        
         messages = [
-            { "role": "system", "content": chat_system_message },
+            { "role": "system", "content": chat_system_message + "\n\n" + "Use this rice information below extracted from Rice Manuals to enhance your response: \n\n" + documents[0].page_content + "\n" + documents[1].page_content + "\n" + documents[2].page_content },
         ]
         
         for message in query.messages:
             messages.append({
                 # ? :: Check if message["is_user"] is actually being parsed correctly
-                "role": "user" if message["is_user"] else "assistant",
+                "role": "user" if bool(message["is_user"]) else "assistant",
                 "content": message["message"]
             })
             
-        question = query.combine_query_context()
-        documents = retriever.invoke(question)        
-        messages.append(get_documents_system_message(documents))
+        # messages.append(get_documents_system_message(documents))
         messages.append({"role": "user", "content": question})
 
         
@@ -165,13 +165,13 @@ async def ask_question(query: ChatQuery):
     
 @app.post("/generate-summary")
 async def generate_summary(query: SummaryQuery):
-    try:
+    try:      
+        documents = retriever.invoke(query.message)
         messages = [
-            { "role": "system", "content": summary_system_message },
+            { "role": "system", "content": summary_system_message + "\n\n" + "Use this rice information below extracted from Rice Manuals to enhance your response: \n\n" + documents[0].page_content + "\n" + documents[1].page_content + "\n" + documents[2].page_content },
         ]
         
-        documents = retriever.invoke(query.message)
-        messages.append(get_documents_system_message(documents))
+        # messages.append(get_documents_system_message(documents))
         messages.append({"role": "user", "content": query.message})
         
         completion = client.chat.completions.create(
@@ -190,11 +190,12 @@ async def generate_summary(query: SummaryQuery):
 @app.post("/generate-title")
 async def generate_title(query: TitleQuery):
     try:
+        # question = query.combine_query_context()
+        documents = retriever.invoke(query.question)        
         messages = [
-            { "role": "system", "content": title_system_message },
+            { "role": "system", "content": title_system_message + "\n\n" + "Use this rice information below extracted from Rice Manuals to enhance your response: \n\n" + documents[0].page_content + "\n" + documents[1].page_content + "\n" + documents[2].page_content },
         ]
-        # documents = retriever.invoke(query.message)
-        # messages.append(get_documents_system_message(documents))
+
         messages.append({"role": "user", "content": query.question})
         
         completion = client.chat.completions.create(
