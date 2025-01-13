@@ -2,18 +2,14 @@
   <NuxtLayout name="auth">
     <div class="w-full h-full flex flex-col gap-3 justify-between items-center text-white">
       <LogoItem />
-      <form class="flex flex-col gap-3 mx-auto items-center max-w-[37.5rem] w-full" @submit.prevent="signin">
-        <p class="text-3xl">Sign In</p>
+      <form class="flex flex-col gap-3 mx-auto items-center max-w-[37.5rem] w-full" @submit.prevent="forgotPassword">
+        <p class="text-3xl">Forgot Password?</p>
         <input id="email" v-model="email" type="text" name="email" placeholder="Email" class="textfield">
-        <input id="password" v-model="password" type="password" name="password" placeholder="Password"
-          class="textfield">
-        <!-- <NuxtLink to="/forgot-password" class="text-sm w-full text-right link-white">Forgot your Password?
-        </NuxtLink> -->
         <p v-if="errorMsg" class="text-red-500">{{ errorMsg }}</p>
-        <button class="button" type="submit">Sign In</button>
+        <p v-if="successMsg" class="text-green-500">{{ successMsg }}</p>
+        <button class="button" type="submit">Recover Account</button>
       </form>
-      <p>Don't have an account? <NuxtLink class="link" to="/register">Sign Up</NuxtLink>
-      </p>
+      <div />
     </div>
     <template #image>
       <div class="auth-bg w-full h-full rounded-2xl" />
@@ -28,24 +24,23 @@ definePageMeta({
 // const router = useRouter()
 const client = useSupabaseClient()
 const email = ref('')
-const password = ref(null)
 const errorMsg = ref('')
+const successMsg = ref('')
 
-async function signin() {
+async function forgotPassword() {
   errorMsg.value = ''
-  if (password.value === null) {
-    errorMsg.value = 'Password is required.'
+  if (email.value === null) {
+    errorMsg.value = 'Email is required.'
     return
   }
   try {
-    const { error } = await client.auth.signInWithPassword({
-      email: email.value,
-      password: password.value,
-    })
+    const { error } = await client.auth.resetPasswordForEmail(email.value, { redirectTo: '/reset-password' })
     if (error) {
       throw error
     }
-    navigateTo("/app")
+    else {
+      successMsg.value = 'Password reset link sent to ' + email.value
+    }
   } catch (error) {
     errorMsg.value = error.message
   }
